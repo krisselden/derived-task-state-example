@@ -25,9 +25,9 @@ export default function createTask(start, equals = (a, b) => a === b) {
 
 class Task {
   @tracked state = {
-    pending: true,
-    failed: false,
-    value: undefined
+    settled: false,
+    rejected: false,
+    result: undefined
   };
 
   constructor(input, start) {
@@ -35,18 +35,18 @@ class Task {
     this.input = input;
     this.controller = controller;
     start(input, controller.signal).then(
-      value => {
+      result => {
         this.state = {
-          pending: false,
-          failed: false,
-          value
+          settled: true,
+          rejected: false,
+          result
         };
       },
-      value => {
+      result => {
         this.state = {
-          pending: false,
-          failed: true,
-          value
+          settled: true,
+          rejected: true,
+          result
         };
       }
     );

@@ -9,7 +9,8 @@
   </p>
   <p>
     Hide the result then update the url, with the slider. Notice in the Network tab that no requests are made when
-    the url changes since the block in the else does not consume the yielded task state.
+    the url changes since the block in the else does not consume the yielded task state. If you toggle show without
+    invalidating the url, it will reuse the existing task that was initialized already.
   </p>
   <p>
     Show the result and set Online to Offline in the Network tab and update the url with the slider.
@@ -38,23 +39,24 @@
   {{#if this.show}}
   <h2>Fetch Result</h2>
 
-  {{#if task.pending}}
+  {{#if task.settled}}
 
-  <p>Loading...</p>
+  {{#if task.rejected}}
 
-  {{else}}
-
-  {{#if task.failed}}
-
-  <p>{{task.value.message}}</p>
+  <p>Error: {{task.result.message}}</p>
 
   {{else}}
 
-  {{#each task.value as |txt|}}
+  {{#each task.result as |txt|}}
   <p>{{txt}}</p>
   {{/each}}
 
   {{/if}}
+
+  {{else}}
+
+  <p>Loading...</p>
+
   {{/if}}
   {{/if}}
   {{/fetch-json}}
