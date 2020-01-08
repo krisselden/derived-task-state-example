@@ -1,5 +1,63 @@
-{{!-- The following component displays Ember's default welcome message. --}}
-<WelcomePage />
-{{!-- Feel free to remove this! --}}
+<h1>Fetch Example</h1>
+<section>
+  <p>
+    Open Network tab of dev tools, watch it as you update parameters.
+  </p>
+  <p>
+    Use the arrow keys on the slider to update the url quickly. If you do it fast enough it should cancel outdated
+    requests.
+  </p>
+  <p>
+    Hide the result then update the url, with the slider. Notice in the Network tab that no requests are made when
+    the url changes since the block in the else does not consume the yielded task state.
+  </p>
+  <p>
+    Show the result and set Online to Offline in the Network tab and update the url with the slider.
+  </p>
+</section>
+
+<section>
+  <h2>Parameters</h2>
+  <p>
+    <label for="paras-range">Paragraphs</label>
+    <input id="paras-range" type="range" name="paras" value={{this.paras}} {{on "input" this.updateParas}} min="1"
+      max="5">
+  </p>
+  <p>
+    {{this.url}}
+  </p>
+  <p>
+    <label for="show-checked">Show Result</label>
+    <input id="show-checked" type="checkbox" name="show" checked={{this.show}} {{on "input" this.toggleShow}}>
+  </p>
+</section>
+
+<section>
+  {{#fetch-json url=this.url as |task|}}
+
+  {{#if this.show}}
+  <h2>Fetch Result</h2>
+
+  {{#if task.pending}}
+
+  <p>Loading...</p>
+
+  {{else}}
+
+  {{#if task.failed}}
+
+  <p>{{task.value.message}}</p>
+
+  {{else}}
+
+  {{#each task.value as |txt|}}
+  <p>{{txt}}</p>
+  {{/each}}
+
+  {{/if}}
+  {{/if}}
+  {{/if}}
+  {{/fetch-json}}
+</section>
 
 {{outlet}}

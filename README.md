@@ -1,57 +1,35 @@
-# fetch-example
+# Example of Derived Async Task State with Tracked
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+Example of a simple `@tracked` async task util for derived async state.
 
-## Prerequisites
+The task util handles starting/reusing/cancelling the task when task state for
+input is requested, intended to be used on a getter that is rendered so the task
+state is tracked and the source of the derived input is tracked by autotracking
+when the getter is rendered.
 
-You will need the following things properly installed on your computer.
+Autotracking is only on during getting the state. The async task function itself
+should not access tracked state, but state that was derived from tracked state and
+passed in as input in the getter. The util can be provided an equals function for
+validating if the input is still good for the task and defaults to `===` to compare
+the new derived input to the existing task's input.
 
-* [Git](https://git-scm.com/)
-* [Node.js](https://nodejs.org/) (with npm)
-* [Ember CLI](https://ember-cli.com/)
-* [Google Chrome](https://google.com/chrome/)
+The util uses an AbortController signal for a cancellation token since it is
+useable with `fetch` but still general enough to be used as a cancellation token
+without fetch.
 
-## Installation
+## Start Example
 
-* `git clone <repository-url>` this repository
-* `cd fetch-example`
-* `npm install`
+Run
 
-## Running / Development
+- `git clone https://github.com/krisselden/derived-task-state-example.git` this repository
+- `cd derived-task-state-example`
+- `yarn`
+- `yarn start`
 
-* `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
-* Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
+Open [http://localhost:4200](http://localhost:4200) and follow instructions on page.
 
-### Code Generators
+## Code of Interest
 
-Make use of the many generators for code, try `ember help generate` for more details
-
-### Running Tests
-
-* `ember test`
-* `ember test --server`
-
-### Linting
-
-* `npm run lint:hbs`
-* `npm run lint:js`
-* `npm run lint:js -- --fix`
-
-### Building
-
-* `ember build` (development)
-* `ember build --environment production` (production)
-
-### Deploying
-
-Specify what it takes to deploy your app.
-
-## Further Reading / Useful Links
-
-* [ember.js](https://emberjs.com/)
-* [ember-cli](https://ember-cli.com/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+- Example glimmer component using the task util – [app/components/fetch-json.js](app/components/fetch-json.js)
+- Template using the example component – [app/templates/application.hbs](app/templates/application.hbs)
+- Tracked task util – [app/utils/task.js](app/utils/task.js)
